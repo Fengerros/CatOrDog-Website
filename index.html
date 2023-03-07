@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Website</title>
+</head>
+<body>
+    <button id="button" onclick="loadImageToTensor()">Load Image</button>
+    <button id="button" onclick="loadModel()">Make prediction</button>
+
+    <img id="image" src="http://localhost:8000/images/2.jpg" width="256" height="256" />
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+    <script>
+
+        async function loadModel() {
+            // Load image to tensor of shape [256, 256, 3].
+            let input = tf.browser.fromPixels(document.getElementById('image'));
+            // Add a dimension to the tensor.
+            input = input.expandDims(0);
+
+            const model = await tf.loadLayersModel('http://localhost:8000/model/model.json');
+            if (model) {
+                // Use the model here.
+                const output = model.predict(input);
+                // Print the output.
+                console.log('output:');
+                output.print();
+                input.dispose();
+                output.dispose();
+            }
+            else {
+                console.log('Failed to load model');
+            }   
+        }
+    </script>
+</body>
+</html>
