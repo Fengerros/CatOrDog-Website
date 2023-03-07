@@ -1,37 +1,237 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>My Website</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>CatOrDog - website</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="assets/css/Lightbox-Gallery-baguetteBox.min.css">
+    <link rel="stylesheet" href="assets/css/untitled.css">
 </head>
-<body>
-    <button id="button" onclick="loadImageToTensor()">Load Image</button>
-    <button id="button" onclick="loadModel()">Make prediction</button>
 
-    <img id="image" src="http://localhost:8000/images/2.jpg" width="256" height="256" />
-
+<body id="page-top">
+    <div id="wrapper">
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
+                    <div class="container-fluid">
+                        <ul class="navbar-nav flex-nowrap ms-auto">
+                            <div class="d-none d-sm-block topbar-divider"></div>
+                            <li class="nav-item dropdown no-arrow">
+                                <!--Profiles-->
+                                <div class="dropdown-toggle nav-link" aria-expanded="false">
+                                    <a class="nav-link" href="https://github.com/pikaxukaka" target="_blank">     
+                                        <span class="d-none d-lg-inline me-2 text-gray-600 small">Pikaxukaka</span>
+                                        <img class="border rounded-circle img-profile" src="assets/img/avatars/avatar_pikax.png" style="margin-right: 30px;">
+                                    </a>
+                                    <a class="nav-link" href="https://github.com/Fengerros" target="_blank">
+                                        <span class="d-none d-lg-inline me-2 text-gray-600 small">FengError</span>
+                                        <img class="border rounded-circle img-profile" src="assets/img/avatars/avatar_feng.png">
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                <div class="container-fluid">
+                    <h3 class="text-dark mb-4">CatOrDog</h3>
+                    <div class="row mb-4">
+                        <div class="col-lg-4">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="text-primary fw-bold m-0">Data</h6>
+                                </div>
+                                <div class="card-body text-center shadow" style="height: 465px;" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)">
+                                    <img id="image" class="rounded-circle mb-3 mt-4" src="assets/img/dogs/init_dog.jpeg" width="256" height="256" style="border-radius: 20% !important;">
+                                    <div style="margin-top: -2px;margin-bottom: -2px;">
+                                        <input id="urlInput" placeholder="Insert url..." type="url" style="width: 200px;margin-right: 0px;margin-top: 10px;margin-bottom: 10px;">
+                                    </div>
+                                    <button onclick="loadImageFromUrl()" class="btn btn-primary" type="button" style="margin-left: 0px;">Add from URL</button>
+                                </div>                                
+                            </div>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 id="prediction" class="text-primary fw-bold m-0">Prediction</h6>
+                                </div>
+                                <div class="card-body shadow">
+                                    <h4 class="small fw-bold">Cat<span class="float-end">0%</span></h4>
+                                    <div class="progress progress-sm mb-3">
+                                        <div class="progress-bar bg-danger" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"><span class="visually-hidden">10%</span></div>
+                                    </div>
+                                    <h4 class="small fw-bold">Dog<span class="float-end">0%</span></h4>
+                                    <div class="progress progress-sm mb-3">
+                                        <div class="progress-bar bg-warning" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"><span class="visually-hidden">90%</span></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col d-flex d-sm-flex d-md-flex d-lg-flex d-xl-flex d-xxl-flex justify-content-center align-items-center justify-content-sm-center align-items-sm-center justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center justify-content-xl-center align-items-xl-center justify-content-xxl-center align-items-xxl-center"><button class="btn btn-primary d-xl-flex justify-content-xl-center" type="button" style="margin-top: 4px;margin-bottom: 4px;" onclick="loadModel()">Run Model</button><img id="loading-image" src="assets/img/gifs/loading.gif" style="margin-left: 20px;width: 25px; height: 25px; display: none"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 id="drag&drop" class="text-primary fw-bold m-0">Import File</h6>
+                                </div>
+                                <div style="height: 212px; text-align:center;" class="card-body shadow d-flex justify-content-center align-items-center" id="drop-zone" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+                                    Drag and drop an image file here or click to select a file to upload 📁
+                                    <input type="file" id="file-input" onchange="loadFile(event)" style="display: none;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card shadow mb-5"></div>
+                </div>
+            </div>
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright"><span>Copyright © CatOrDog 2023</span></div>
+                </div>
+            </footer>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
     <script>
+        firstLoad();
+
+        function firstLoad() {
+            document.getElementById("prediction").textContent = 'Prediction';
+            const image = document.getElementById('image');
+            image.src = 'assets/img/dogs/image2.jpeg';
+            resizeAndCropImage(image);
+        }
+
+        function loadFile(event) {
+            document.getElementById("prediction").textContent = 'Prediction';
+
+            const image = document.getElementById('image');
+            image.src = URL.createObjectURL(event.target.files[0]);
+            resizeAndCropImage(image);
+        }
+    
+        function loadImageFromUrl() {
+            let lastSrc = document.getElementById('image').src;
+            document.getElementById("prediction").textContent = 'Prediction';
+            const urlInput = document.getElementById('urlInput');
+            const imageUrl = urlInput.value;
+            if (imageUrl) {
+                const image = document.getElementById('image');
+                image.crossOrigin = "anonymous";
+                image.onload = function() {
+                    resizeAndCropImage(image);
+                };
+                image.onerror = function() {
+                    alert('Error loading image from URL');
+                    image.src = lastSrc;
+                };
+                image.src = imageUrl;
+            }
+        }
+    
+        function resizeAndCropImage(image) {
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            img.src = image.src;
+            img.onload = () => {
+                let width = img.width;
+                let height = img.height;
+                const shorterSideLength = Math.min(width, height);
+                if (shorterSideLength > 256) {
+                    const scaleRatio = 256 / shorterSideLength;
+                    width *= scaleRatio;
+                    height *= scaleRatio;
+                }
+                const canvas = document.createElement('canvas');
+                canvas.width = canvas.height = 256;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img,
+                    (256 - width) / 2,
+                    (256 - height) / 2,
+                    width,
+                    height
+                );
+                image.src = canvas.toDataURL();
+            };
+        }
 
         async function loadModel() {
+            document.getElementById("prediction").textContent = 'Prediction (Running model...)';
+
+            const loadingImage = document.getElementById('loading-image');
+            loadingImage.style.display = 'inline';
+
             // Load image to tensor of shape [256, 256, 3].
             let input = tf.browser.fromPixels(document.getElementById('image'));
             // Add a dimension to the tensor.
             input = input.expandDims(0);
 
-            const model = await tf.loadLayersModel('http://localhost:8000/model/model.json');
-            if (model) {
+            //random tensor of shape [1, 256, 256, 3]
+            //const input = tf.randomNormal([1, 256, 256, 3]);
+
+            const model = await tf.loadLayersModel('http://localhost:8000/assets/model/model.json');
+            if (model) {            
                 // Use the model here.
                 const output = model.predict(input);
-                // Print the output.
-                console.log('output:');
-                output.print();
-                input.dispose();
-                output.dispose();
+            
+                // Output the prediction   
+                output.data().then(prediction => {
+                    // Get the progress bar elements
+                    const catProgressBar = document.querySelector('.progress-bar.bg-danger');
+                    const dogProgressBar = document.querySelector('.progress-bar.bg-warning');
+            
+                    // Calculate the percentage for cat and dog
+                    const catPercent = Math.round((1 - prediction) * 100);
+                    const dogPercent = Math.round(prediction * 100);
+            
+                    // Update the progress bar values and labels
+                    catProgressBar.style.width = `${catPercent}%`;
+                    catProgressBar.parentElement.previousElementSibling.querySelector('span').textContent = `${catPercent}%`;
+                    dogProgressBar.style.width = `${dogPercent}%`;
+                    dogProgressBar.parentElement.previousElementSibling.querySelector('span').textContent = `${dogPercent}%`;
+            
+                    // Add to header "Prediction (Done!)"
+                    document.getElementById("prediction").textContent = 'Prediction (Done!)';
+                    loadingImage.style.display = 'none';
+                });
             }
             else {
                 console.log('Failed to load model');
+                loadingImage.style.display = 'none';
             }   
         }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+          }
+          
+          function handleDrop(event) {
+            event.preventDefault();
+          
+            const files = event.dataTransfer.files;
+            if (files.length > 0) {
+              const file = files[0];
+              if (file.type.match(/image.*/)) {
+                const image = document.getElementById('image');
+                image.src = URL.createObjectURL(file);
+                resizeAndCropImage(image);
+              } else {
+                alert('File is not an image.');
+              }
+            }
+          }
+          
+          document.getElementById('drop-zone').addEventListener('click', function() {
+            document.getElementById('file-input').click();
+          });
     </script>
+
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/Lightbox-Gallery-baguetteBox.min.js"></script>
+    <script src="assets/js/Lightbox-Gallery.js"></script>
+    <script src="assets/js/theme.js"></script>
 </body>
+
 </html>
